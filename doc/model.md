@@ -1,4 +1,26 @@
 
+
+# Introduction
+
+Yield curve construction is a fundamental task in finance, particularly in the valuation of fixed-income securities. A yield curve represents the relationship between interest rates (or yields) and different maturities. In practice, only a limited number of market instruments are available to derive the yield curve, necessitating the use of interpolation methods to estimate yields for maturities not directly observed in the market. 
+
+The preferable properties of interpolation methods for yield curve construction include:
+
+| Property | Description | Why Important for Yield Curve Construction |
+|----------|-------------|--------------------------------------------|
+|No-arbitrage| Forward rates are non-negative | Ensures that the constructed yield curve does not imply arbitrage opportunities, which is crucial for accurate pricing of financial instruments. |
+|Exactness| Reproduces market prices | Ensures that the yield curve accurately reflects the prices of the underlying market instruments, leading to reliable valuations. |
+|Locality| Changes in one part of the curve do not affect distant parts | Allows for adjustments to specific segments of the yield curve without unintended consequences on other segments, enhancing flexibility in curve construction. |
+|Stability| Small changes in input data lead to small changes in output | Ensures that the yield curve is robust to minor fluctuations in market data, providing confidence in the derived yields. |
+|Local Hedging| Enables hedging of instruments using nearby maturities | Facilitates effective risk management by allowing traders to hedge positions using instruments with similar maturities, reducing basis risk.|
+
+Some common interpolation methods used in yield curve construction include:
+
+| Method | Description | Space |
+|--------|-------------|----------------|
+|Linear Interpolation| Connects data points with straight lines | 
+
+
 # Polynomial Spline
 
 A polynomial spline is a piecewise-defined polynomial function that maintains a high degree of smoothness at the points where the polynomial pieces connect, known as knots. Splines are widely used in numerical analysis, computer graphics, and data interpolation due to their flexibility and ability to approximate complex shapes.
