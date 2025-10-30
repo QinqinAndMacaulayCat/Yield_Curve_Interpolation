@@ -1,0 +1,27 @@
+\babel@toc {american}{}\relax 
+\contentsline {chapter}{\numberline {1}Introduction}{2}{}%
+\contentsline {chapter}{\numberline {2}Literature Review}{4}{}%
+\contentsline {section}{\numberline {2.1}Traditional Approaches to Yield Curve Construction}{4}{}%
+\contentsline {section}{\numberline {2.2}Machine Learning and Deep Learning in Yield Curve Modeling}{4}{}%
+\contentsline {section}{\numberline {2.3}Symbolic Regression as an Interpretable Alternative}{5}{}%
+\contentsline {section}{\numberline {2.4}Gaps in the Existing Literature}{5}{}%
+\contentsline {chapter}{\numberline {3}Methodology}{8}{}%
+\contentsline {section}{\numberline {3.1}Overview}{8}{}%
+\contentsline {section}{\numberline {3.2}Traditional Interpolation and Parametric Models}{8}{}%
+\contentsline {subsection}{\numberline {3.2.1}Log-Linear Interpolation on Discount Factors}{8}{}%
+\contentsline {subsection}{\numberline {3.2.2}Cubic Spline Interpolation}{9}{}%
+\contentsline {subsection}{\numberline {3.2.3}Hermite Interpolation}{9}{}%
+\contentsline {subsection}{\numberline {3.2.4}Monotone–Convex Interpolation}{10}{}%
+\contentsline {subsection}{\numberline {3.2.5}Parametric Models: Nelson–Siegel and Smith–Wilson}{10}{}%
+\contentsline {section}{\numberline {3.3}Machine and Deep Learning Approaches}{10}{}%
+\contentsline {subsection}{\numberline {3.3.1}Gaussian Process Regression}{10}{}%
+\contentsline {subsection}{\numberline {3.3.2}Neural Network and LSTM Models}{11}{}%
+\contentsline {section}{\numberline {3.4}Symbolic Regression Framework}{11}{}%
+\contentsline {subsection}{\numberline {3.4.1}Concept and Rationale}{11}{}%
+\contentsline {subsection}{\numberline {3.4.2}Algorithmic Workflow}{11}{}%
+\contentsline {subsection}{\numberline {3.4.3}Objective Function and Constraints}{12}{}%
+\contentsline {section}{\numberline {3.5}Model Validation and Comparison}{12}{}%
+\contentsline {subsection}{\numberline {3.5.1}Validation Framework}{12}{}%
+\contentsline {subsection}{\numberline {3.5.2}Model Comparison}{12}{}%
+\contentsline {subsection}{\numberline {3.5.3}Interpretation of Results}{13}{}%
+\contentsline {section}{\numberline {3.6}Summary}{13}{}%
