@@ -1,0 +1,715 @@
+% $ biblatex auxiliary file $
+% $ biblatex bbl format version 3.3 $
+% Do not modify the above lines!
+%
+% This is an auxiliary file used by the 'biblatex' package.
+% This file may safely be deleted. It will be recreated by
+% biber as required.
+%
+\begingroup
+\makeatletter
+\@ifundefined{ver@biblatex.sty}
+  {\@latex@error
+     {Missing 'biblatex' package}
+     {The bibliography requires the 'biblatex' package.}
+      \aftergroup\endinput}
+  {}
+\endgroup
+
+
+\refsection{0}
+  \datalist[entry]{apa/apasortcite//global/global/global}
+    \entry{BrigoMercurio2006}{book}{}{}
+      \name{author}{2}{}{%
+        {{un=0,uniquepart=base,hash=fe8af4531a2b4f950378eda1f0da235d}{%
+           family={Brigo},
+           familyi={B\bibinitperiod},
+           given={Damiano},
+           giveni={D\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=d9048a3e86ed50e3242648ddef25afc1}{%
+           family={Mercurio},
+           familyi={M\bibinitperiod},
+           given={Fabio},
+           giveni={F\bibinitperiod},
+           givenun=0}}%
+      }
+      \list{publisher}{1}{%
+        {Springer}%
+      }
+      \strng{namehash}{69769d56c78f438c6a28ce507410f113}
+      \strng{fullhash}{69769d56c78f438c6a28ce507410f113}
+      \strng{fullhashraw}{69769d56c78f438c6a28ce507410f113}
+      \strng{bibnamehash}{69769d56c78f438c6a28ce507410f113}
+      \strng{authorbibnamehash}{69769d56c78f438c6a28ce507410f113}
+      \strng{authornamehash}{69769d56c78f438c6a28ce507410f113}
+      \strng{authorfullhash}{69769d56c78f438c6a28ce507410f113}
+      \strng{authorfullhashraw}{69769d56c78f438c6a28ce507410f113}
+      \field{sortinit}{B}
+      \field{sortinithash}{d7095fff47cda75ca2589920aae98399}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{edition}{2nd}
+      \field{title}{Interest Rate Models: Theory and Practice}
+      \field{year}{2006}
+      \verb{doi}
+      \verb 10.1007/978-3-540-34604-7
+      \endverb
+    \endentry
+    \entry{EIOPA2018}{report}{}{}
+      \name{author}{1}{}{%
+        {{un=0,uniquepart=base,hash=fa985e82ac6111d69e0240b42a80b775}{%
+           family={{EIOPA}},
+           familyi={E\bibinitperiod}}}%
+      }
+      \list{institution}{2}{%
+        {European Insurance}%
+        {Occupational Pensions Authority}%
+      }
+      \strng{namehash}{fa985e82ac6111d69e0240b42a80b775}
+      \strng{fullhash}{fa985e82ac6111d69e0240b42a80b775}
+      \strng{fullhashraw}{fa985e82ac6111d69e0240b42a80b775}
+      \strng{bibnamehash}{fa985e82ac6111d69e0240b42a80b775}
+      \strng{authorbibnamehash}{fa985e82ac6111d69e0240b42a80b775}
+      \strng{authornamehash}{fa985e82ac6111d69e0240b42a80b775}
+      \strng{authorfullhash}{fa985e82ac6111d69e0240b42a80b775}
+      \strng{authorfullhashraw}{fa985e82ac6111d69e0240b42a80b775}
+      \field{sortinit}{E}
+      \field{sortinithash}{8da8a182d344d5b9047633dfc0cc9131}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Technical Documentation of the Methodology to Derive the UFR}
+      \field{type}{techreport}
+      \field{year}{2018}
+      \verb{urlraw}
+      \verb https://www.eiopa.europa.eu/document-library/technical-document/technical-documentation-risk-free-interest-rate-20180531_en
+      \endverb
+      \verb{url}
+      \verb https://www.eiopa.europa.eu/document-library/technical-document/technical-documentation-risk-free-interest-rate-20180531_en
+      \endverb
+    \endentry
+    \entry{HaganWest2006}{article}{}{}
+      \name{author}{2}{}{%
+        {{un=0,uniquepart=base,hash=067f5fcee09845c4df74dde207a89c67}{%
+           family={Hagan},
+           familyi={H\bibinitperiod},
+           given={Patrick\bibnamedelima S.},
+           giveni={P\bibinitperiod\bibinitdelim S\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=e27138492bf7e2f8e978b3b6e2e8bb61}{%
+           family={West},
+           familyi={W\bibinitperiod},
+           given={Graeme},
+           giveni={G\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{81aba055f1a2b87136d30d300a51cd34}
+      \strng{fullhash}{81aba055f1a2b87136d30d300a51cd34}
+      \strng{fullhashraw}{81aba055f1a2b87136d30d300a51cd34}
+      \strng{bibnamehash}{81aba055f1a2b87136d30d300a51cd34}
+      \strng{authorbibnamehash}{81aba055f1a2b87136d30d300a51cd34}
+      \strng{authornamehash}{81aba055f1a2b87136d30d300a51cd34}
+      \strng{authorfullhash}{81aba055f1a2b87136d30d300a51cd34}
+      \strng{authorfullhashraw}{81aba055f1a2b87136d30d300a51cd34}
+      \field{sortinit}{H}
+      \field{sortinithash}{23a3aa7c24e56cfa16945d55545109b5}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Applied Mathematical Finance}
+      \field{number}{2}
+      \field{title}{Interpolation methods for curve construction}
+      \field{volume}{13}
+      \field{year}{2006}
+      \field{pages}{89\bibrangedash 129}
+      \range{pages}{41}
+      \verb{doi}
+      \verb 10.1080/13504860600692786
+      \endverb
+    \endentry
+    \entry{McCulloch1975}{article}{}{}
+      \name{author}{1}{}{%
+        {{un=0,uniquepart=base,hash=37156a59cb66d00d888a329d3ec8a9ad}{%
+           family={McCulloch},
+           familyi={M\bibinitperiod},
+           given={J.\bibnamedelimi Huston},
+           giveni={J\bibinitperiod\bibinitdelim H\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{37156a59cb66d00d888a329d3ec8a9ad}
+      \strng{fullhash}{37156a59cb66d00d888a329d3ec8a9ad}
+      \strng{fullhashraw}{37156a59cb66d00d888a329d3ec8a9ad}
+      \strng{bibnamehash}{37156a59cb66d00d888a329d3ec8a9ad}
+      \strng{authorbibnamehash}{37156a59cb66d00d888a329d3ec8a9ad}
+      \strng{authornamehash}{37156a59cb66d00d888a329d3ec8a9ad}
+      \strng{authorfullhash}{37156a59cb66d00d888a329d3ec8a9ad}
+      \strng{authorfullhashraw}{37156a59cb66d00d888a329d3ec8a9ad}
+      \field{sortinit}{M}
+      \field{sortinithash}{4625c616857f13d17ce56f7d4f97d451}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Journal of Finance}
+      \field{number}{3}
+      \field{title}{The Tax-Adjusted Yield Curve}
+      \field{volume}{30}
+      \field{year}{1975}
+      \field{pages}{811\bibrangedash 830}
+      \range{pages}{20}
+      \verb{doi}
+      \verb 10.2307/2326595
+      \endverb
+    \endentry
+    \entry{NelsonSiegel1987}{article}{}{}
+      \name{author}{2}{}{%
+        {{un=0,uniquepart=base,hash=9733acb14bd6e601bdaa41f7950ea01f}{%
+           family={Nelson},
+           familyi={N\bibinitperiod},
+           given={Charles\bibnamedelima R.},
+           giveni={C\bibinitperiod\bibinitdelim R\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=b37f99a9e0f4a830cec3bf99315aab7f}{%
+           family={Siegel},
+           familyi={S\bibinitperiod},
+           given={Andrew\bibnamedelima F.},
+           giveni={A\bibinitperiod\bibinitdelim F\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{4c1b98a859d9f34aaa2312f1fb4102dc}
+      \strng{fullhash}{4c1b98a859d9f34aaa2312f1fb4102dc}
+      \strng{fullhashraw}{4c1b98a859d9f34aaa2312f1fb4102dc}
+      \strng{bibnamehash}{4c1b98a859d9f34aaa2312f1fb4102dc}
+      \strng{authorbibnamehash}{4c1b98a859d9f34aaa2312f1fb4102dc}
+      \strng{authornamehash}{4c1b98a859d9f34aaa2312f1fb4102dc}
+      \strng{authorfullhash}{4c1b98a859d9f34aaa2312f1fb4102dc}
+      \strng{authorfullhashraw}{4c1b98a859d9f34aaa2312f1fb4102dc}
+      \field{sortinit}{N}
+      \field{sortinithash}{22369a73d5f88983a108b63f07f37084}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Journal of Business}
+      \field{number}{4}
+      \field{title}{Parsimonious Modeling of Yield Curves}
+      \field{volume}{60}
+      \field{year}{1987}
+      \field{pages}{473\bibrangedash 489}
+      \range{pages}{17}
+      \verb{doi}
+      \verb 10.1086/296409
+      \endverb
+    \endentry
+    \entry{SchmidtLipson2009}{article}{}{}
+      \name{author}{2}{}{%
+        {{un=0,uniquepart=base,hash=7047d212f80975d90e11f6931e965e13}{%
+           family={Schmidt},
+           familyi={S\bibinitperiod},
+           given={Michael},
+           giveni={M\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=475bdf26aafc86ddd3f62a8ff9267f8a}{%
+           family={Lipson},
+           familyi={L\bibinitperiod},
+           given={Hod},
+           giveni={H\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{0aa99564fb3a9c17033d7d720330bdda}
+      \strng{fullhash}{0aa99564fb3a9c17033d7d720330bdda}
+      \strng{fullhashraw}{0aa99564fb3a9c17033d7d720330bdda}
+      \strng{bibnamehash}{0aa99564fb3a9c17033d7d720330bdda}
+      \strng{authorbibnamehash}{0aa99564fb3a9c17033d7d720330bdda}
+      \strng{authornamehash}{0aa99564fb3a9c17033d7d720330bdda}
+      \strng{authorfullhash}{0aa99564fb3a9c17033d7d720330bdda}
+      \strng{authorfullhashraw}{0aa99564fb3a9c17033d7d720330bdda}
+      \field{sortinit}{S}
+      \field{sortinithash}{b164b07b29984b41daf1e85279fbc5ab}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Science}
+      \field{number}{5923}
+      \field{title}{Distilling Free-Form Natural Laws from Experimental Data}
+      \field{volume}{324}
+      \field{year}{2009}
+      \field{pages}{8185}
+      \range{pages}{1}
+      \verb{doi}
+      \verb 10.1126/science.1165893
+      \endverb
+    \endentry
+    \entry{SmithWilson2001}{report}{}{}
+      \name{author}{2}{}{%
+        {{un=0,uniquepart=base,hash=56a71a9efbc344f169ac1454c9e7af49}{%
+           family={Smith},
+           familyi={S\bibinitperiod},
+           given={Andrew},
+           giveni={A\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=2283ac69e1cf6d7833bbdaa39f0f6658}{%
+           family={Wilson},
+           familyi={W\bibinitperiod},
+           given={Tom},
+           giveni={T\bibinitperiod},
+           givenun=0}}%
+      }
+      \list{institution}{1}{%
+        {BACOB Research Paper}%
+      }
+      \strng{namehash}{5fa814fef05afc559468ccd28151efdd}
+      \strng{fullhash}{5fa814fef05afc559468ccd28151efdd}
+      \strng{fullhashraw}{5fa814fef05afc559468ccd28151efdd}
+      \strng{bibnamehash}{5fa814fef05afc559468ccd28151efdd}
+      \strng{authorbibnamehash}{5fa814fef05afc559468ccd28151efdd}
+      \strng{authornamehash}{5fa814fef05afc559468ccd28151efdd}
+      \strng{authorfullhash}{5fa814fef05afc559468ccd28151efdd}
+      \strng{authorfullhashraw}{5fa814fef05afc559468ccd28151efdd}
+      \field{sortinit}{S}
+      \field{sortinithash}{b164b07b29984b41daf1e85279fbc5ab}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Fitting Yield Curves with Long Term Constraints}
+      \field{type}{techreport}
+      \field{year}{2001}
+    \endentry
+    \entry{Svensson1994}{article}{}{}
+      \name{author}{1}{}{%
+        {{un=0,uniquepart=base,hash=c7ed2f6dc52325974f771adfbb5d4e57}{%
+           family={Svensson},
+           familyi={S\bibinitperiod},
+           given={Lars\bibnamedelimb E.\bibnamedelimi O.},
+           giveni={L\bibinitperiod\bibinitdelim E\bibinitperiod\bibinitdelim O\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{c7ed2f6dc52325974f771adfbb5d4e57}
+      \strng{fullhash}{c7ed2f6dc52325974f771adfbb5d4e57}
+      \strng{fullhashraw}{c7ed2f6dc52325974f771adfbb5d4e57}
+      \strng{bibnamehash}{c7ed2f6dc52325974f771adfbb5d4e57}
+      \strng{authorbibnamehash}{c7ed2f6dc52325974f771adfbb5d4e57}
+      \strng{authornamehash}{c7ed2f6dc52325974f771adfbb5d4e57}
+      \strng{authorfullhash}{c7ed2f6dc52325974f771adfbb5d4e57}
+      \strng{authorfullhashraw}{c7ed2f6dc52325974f771adfbb5d4e57}
+      \field{sortinit}{S}
+      \field{sortinithash}{b164b07b29984b41daf1e85279fbc5ab}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{IMF Working Paper}
+      \field{number}{114}
+      \field{title}{Estimating and Interpreting Forward Interest Rates: Sweden 1992–1994}
+      \field{volume}{94}
+      \field{year}{1994}
+      \verb{doi}
+      \verb 10.5089/9781451852507.001
+      \endverb
+    \endentry
+    \entry{UdrescuTegmark2020}{article}{}{}
+      \name{author}{2}{}{%
+        {{un=0,uniquepart=base,hash=f2339bd442c7b65225734f4da3499295}{%
+           family={Udrescu},
+           familyi={U\bibinitperiod},
+           given={Silviu-Marian},
+           giveni={S\bibinithyphendelim M\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=b9b3c445e1013a97fc6318e06799b37b}{%
+           family={Tegmark},
+           familyi={T\bibinitperiod},
+           given={Max},
+           giveni={M\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{0df1883f8d98fc7c19b7d00188850bb3}
+      \strng{fullhash}{0df1883f8d98fc7c19b7d00188850bb3}
+      \strng{fullhashraw}{0df1883f8d98fc7c19b7d00188850bb3}
+      \strng{bibnamehash}{0df1883f8d98fc7c19b7d00188850bb3}
+      \strng{authorbibnamehash}{0df1883f8d98fc7c19b7d00188850bb3}
+      \strng{authornamehash}{0df1883f8d98fc7c19b7d00188850bb3}
+      \strng{authorfullhash}{0df1883f8d98fc7c19b7d00188850bb3}
+      \strng{authorfullhashraw}{0df1883f8d98fc7c19b7d00188850bb3}
+      \field{sortinit}{U}
+      \field{sortinithash}{6901a00e45705986ee5e7ca9fd39adca}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Science Advances}
+      \field{number}{16}
+      \field{title}{{AI Feynman}: A physics-inspired method for symbolic regression}
+      \field{volume}{6}
+      \field{year}{2020}
+      \field{pages}{eaay2631}
+      \range{pages}{-1}
+      \verb{doi}
+      \verb 10.1126/sciadv.aay2631
+      \endverb
+    \endentry
+  \enddatalist
+  \datalist[entry]{apa/global//global/global/global}
+    \entry{BrigoMercurio2006}{book}{}{}
+      \name{author}{2}{}{%
+        {{un=0,uniquepart=base,hash=fe8af4531a2b4f950378eda1f0da235d}{%
+           family={Brigo},
+           familyi={B\bibinitperiod},
+           given={Damiano},
+           giveni={D\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=d9048a3e86ed50e3242648ddef25afc1}{%
+           family={Mercurio},
+           familyi={M\bibinitperiod},
+           given={Fabio},
+           giveni={F\bibinitperiod},
+           givenun=0}}%
+      }
+      \list{publisher}{1}{%
+        {Springer}%
+      }
+      \strng{namehash}{69769d56c78f438c6a28ce507410f113}
+      \strng{fullhash}{69769d56c78f438c6a28ce507410f113}
+      \strng{fullhashraw}{69769d56c78f438c6a28ce507410f113}
+      \strng{bibnamehash}{69769d56c78f438c6a28ce507410f113}
+      \strng{authorbibnamehash}{69769d56c78f438c6a28ce507410f113}
+      \strng{authornamehash}{69769d56c78f438c6a28ce507410f113}
+      \strng{authorfullhash}{69769d56c78f438c6a28ce507410f113}
+      \strng{authorfullhashraw}{69769d56c78f438c6a28ce507410f113}
+      \field{sortinit}{B}
+      \field{sortinithash}{d7095fff47cda75ca2589920aae98399}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{edition}{2nd}
+      \field{title}{Interest Rate Models: Theory and Practice}
+      \field{year}{2006}
+      \verb{doi}
+      \verb 10.1007/978-3-540-34604-7
+      \endverb
+    \endentry
+    \entry{EIOPA2018}{report}{}{}
+      \name{author}{1}{}{%
+        {{un=0,uniquepart=base,hash=fa985e82ac6111d69e0240b42a80b775}{%
+           family={{EIOPA}},
+           familyi={E\bibinitperiod}}}%
+      }
+      \list{institution}{2}{%
+        {European Insurance}%
+        {Occupational Pensions Authority}%
+      }
+      \strng{namehash}{fa985e82ac6111d69e0240b42a80b775}
+      \strng{fullhash}{fa985e82ac6111d69e0240b42a80b775}
+      \strng{fullhashraw}{fa985e82ac6111d69e0240b42a80b775}
+      \strng{bibnamehash}{fa985e82ac6111d69e0240b42a80b775}
+      \strng{authorbibnamehash}{fa985e82ac6111d69e0240b42a80b775}
+      \strng{authornamehash}{fa985e82ac6111d69e0240b42a80b775}
+      \strng{authorfullhash}{fa985e82ac6111d69e0240b42a80b775}
+      \strng{authorfullhashraw}{fa985e82ac6111d69e0240b42a80b775}
+      \field{sortinit}{E}
+      \field{sortinithash}{8da8a182d344d5b9047633dfc0cc9131}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Technical Documentation of the Methodology to Derive the UFR}
+      \field{type}{techreport}
+      \field{year}{2018}
+      \verb{urlraw}
+      \verb https://www.eiopa.europa.eu/document-library/technical-document/technical-documentation-risk-free-interest-rate-20180531_en
+      \endverb
+      \verb{url}
+      \verb https://www.eiopa.europa.eu/document-library/technical-document/technical-documentation-risk-free-interest-rate-20180531_en
+      \endverb
+    \endentry
+    \entry{HaganWest2006}{article}{}{}
+      \name{author}{2}{}{%
+        {{un=0,uniquepart=base,hash=067f5fcee09845c4df74dde207a89c67}{%
+           family={Hagan},
+           familyi={H\bibinitperiod},
+           given={Patrick\bibnamedelima S.},
+           giveni={P\bibinitperiod\bibinitdelim S\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=e27138492bf7e2f8e978b3b6e2e8bb61}{%
+           family={West},
+           familyi={W\bibinitperiod},
+           given={Graeme},
+           giveni={G\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{81aba055f1a2b87136d30d300a51cd34}
+      \strng{fullhash}{81aba055f1a2b87136d30d300a51cd34}
+      \strng{fullhashraw}{81aba055f1a2b87136d30d300a51cd34}
+      \strng{bibnamehash}{81aba055f1a2b87136d30d300a51cd34}
+      \strng{authorbibnamehash}{81aba055f1a2b87136d30d300a51cd34}
+      \strng{authornamehash}{81aba055f1a2b87136d30d300a51cd34}
+      \strng{authorfullhash}{81aba055f1a2b87136d30d300a51cd34}
+      \strng{authorfullhashraw}{81aba055f1a2b87136d30d300a51cd34}
+      \field{sortinit}{H}
+      \field{sortinithash}{23a3aa7c24e56cfa16945d55545109b5}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Applied Mathematical Finance}
+      \field{number}{2}
+      \field{title}{Interpolation methods for curve construction}
+      \field{volume}{13}
+      \field{year}{2006}
+      \field{pages}{89\bibrangedash 129}
+      \range{pages}{41}
+      \verb{doi}
+      \verb 10.1080/13504860600692786
+      \endverb
+    \endentry
+    \entry{McCulloch1975}{article}{}{}
+      \name{author}{1}{}{%
+        {{un=0,uniquepart=base,hash=37156a59cb66d00d888a329d3ec8a9ad}{%
+           family={McCulloch},
+           familyi={M\bibinitperiod},
+           given={J.\bibnamedelimi Huston},
+           giveni={J\bibinitperiod\bibinitdelim H\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{37156a59cb66d00d888a329d3ec8a9ad}
+      \strng{fullhash}{37156a59cb66d00d888a329d3ec8a9ad}
+      \strng{fullhashraw}{37156a59cb66d00d888a329d3ec8a9ad}
+      \strng{bibnamehash}{37156a59cb66d00d888a329d3ec8a9ad}
+      \strng{authorbibnamehash}{37156a59cb66d00d888a329d3ec8a9ad}
+      \strng{authornamehash}{37156a59cb66d00d888a329d3ec8a9ad}
+      \strng{authorfullhash}{37156a59cb66d00d888a329d3ec8a9ad}
+      \strng{authorfullhashraw}{37156a59cb66d00d888a329d3ec8a9ad}
+      \field{sortinit}{M}
+      \field{sortinithash}{4625c616857f13d17ce56f7d4f97d451}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Journal of Finance}
+      \field{number}{3}
+      \field{title}{The Tax-Adjusted Yield Curve}
+      \field{volume}{30}
+      \field{year}{1975}
+      \field{pages}{811\bibrangedash 830}
+      \range{pages}{20}
+      \verb{doi}
+      \verb 10.2307/2326595
+      \endverb
+    \endentry
+    \entry{NelsonSiegel1987}{article}{}{}
+      \name{author}{2}{}{%
+        {{un=0,uniquepart=base,hash=9733acb14bd6e601bdaa41f7950ea01f}{%
+           family={Nelson},
+           familyi={N\bibinitperiod},
+           given={Charles\bibnamedelima R.},
+           giveni={C\bibinitperiod\bibinitdelim R\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=b37f99a9e0f4a830cec3bf99315aab7f}{%
+           family={Siegel},
+           familyi={S\bibinitperiod},
+           given={Andrew\bibnamedelima F.},
+           giveni={A\bibinitperiod\bibinitdelim F\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{4c1b98a859d9f34aaa2312f1fb4102dc}
+      \strng{fullhash}{4c1b98a859d9f34aaa2312f1fb4102dc}
+      \strng{fullhashraw}{4c1b98a859d9f34aaa2312f1fb4102dc}
+      \strng{bibnamehash}{4c1b98a859d9f34aaa2312f1fb4102dc}
+      \strng{authorbibnamehash}{4c1b98a859d9f34aaa2312f1fb4102dc}
+      \strng{authornamehash}{4c1b98a859d9f34aaa2312f1fb4102dc}
+      \strng{authorfullhash}{4c1b98a859d9f34aaa2312f1fb4102dc}
+      \strng{authorfullhashraw}{4c1b98a859d9f34aaa2312f1fb4102dc}
+      \field{sortinit}{N}
+      \field{sortinithash}{22369a73d5f88983a108b63f07f37084}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Journal of Business}
+      \field{number}{4}
+      \field{title}{Parsimonious Modeling of Yield Curves}
+      \field{volume}{60}
+      \field{year}{1987}
+      \field{pages}{473\bibrangedash 489}
+      \range{pages}{17}
+      \verb{doi}
+      \verb 10.1086/296409
+      \endverb
+    \endentry
+    \entry{SchmidtLipson2009}{article}{}{}
+      \name{author}{2}{}{%
+        {{un=0,uniquepart=base,hash=7047d212f80975d90e11f6931e965e13}{%
+           family={Schmidt},
+           familyi={S\bibinitperiod},
+           given={Michael},
+           giveni={M\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=475bdf26aafc86ddd3f62a8ff9267f8a}{%
+           family={Lipson},
+           familyi={L\bibinitperiod},
+           given={Hod},
+           giveni={H\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{0aa99564fb3a9c17033d7d720330bdda}
+      \strng{fullhash}{0aa99564fb3a9c17033d7d720330bdda}
+      \strng{fullhashraw}{0aa99564fb3a9c17033d7d720330bdda}
+      \strng{bibnamehash}{0aa99564fb3a9c17033d7d720330bdda}
+      \strng{authorbibnamehash}{0aa99564fb3a9c17033d7d720330bdda}
+      \strng{authornamehash}{0aa99564fb3a9c17033d7d720330bdda}
+      \strng{authorfullhash}{0aa99564fb3a9c17033d7d720330bdda}
+      \strng{authorfullhashraw}{0aa99564fb3a9c17033d7d720330bdda}
+      \field{sortinit}{S}
+      \field{sortinithash}{b164b07b29984b41daf1e85279fbc5ab}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Science}
+      \field{number}{5923}
+      \field{title}{Distilling Free-Form Natural Laws from Experimental Data}
+      \field{volume}{324}
+      \field{year}{2009}
+      \field{pages}{8185}
+      \range{pages}{1}
+      \verb{doi}
+      \verb 10.1126/science.1165893
+      \endverb
+    \endentry
+    \entry{SmithWilson2001}{report}{}{}
+      \name{author}{2}{}{%
+        {{un=0,uniquepart=base,hash=56a71a9efbc344f169ac1454c9e7af49}{%
+           family={Smith},
+           familyi={S\bibinitperiod},
+           given={Andrew},
+           giveni={A\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=2283ac69e1cf6d7833bbdaa39f0f6658}{%
+           family={Wilson},
+           familyi={W\bibinitperiod},
+           given={Tom},
+           giveni={T\bibinitperiod},
+           givenun=0}}%
+      }
+      \list{institution}{1}{%
+        {BACOB Research Paper}%
+      }
+      \strng{namehash}{5fa814fef05afc559468ccd28151efdd}
+      \strng{fullhash}{5fa814fef05afc559468ccd28151efdd}
+      \strng{fullhashraw}{5fa814fef05afc559468ccd28151efdd}
+      \strng{bibnamehash}{5fa814fef05afc559468ccd28151efdd}
+      \strng{authorbibnamehash}{5fa814fef05afc559468ccd28151efdd}
+      \strng{authornamehash}{5fa814fef05afc559468ccd28151efdd}
+      \strng{authorfullhash}{5fa814fef05afc559468ccd28151efdd}
+      \strng{authorfullhashraw}{5fa814fef05afc559468ccd28151efdd}
+      \field{sortinit}{S}
+      \field{sortinithash}{b164b07b29984b41daf1e85279fbc5ab}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Fitting Yield Curves with Long Term Constraints}
+      \field{type}{techreport}
+      \field{year}{2001}
+    \endentry
+    \entry{Svensson1994}{article}{}{}
+      \name{author}{1}{}{%
+        {{un=0,uniquepart=base,hash=c7ed2f6dc52325974f771adfbb5d4e57}{%
+           family={Svensson},
+           familyi={S\bibinitperiod},
+           given={Lars\bibnamedelimb E.\bibnamedelimi O.},
+           giveni={L\bibinitperiod\bibinitdelim E\bibinitperiod\bibinitdelim O\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{c7ed2f6dc52325974f771adfbb5d4e57}
+      \strng{fullhash}{c7ed2f6dc52325974f771adfbb5d4e57}
+      \strng{fullhashraw}{c7ed2f6dc52325974f771adfbb5d4e57}
+      \strng{bibnamehash}{c7ed2f6dc52325974f771adfbb5d4e57}
+      \strng{authorbibnamehash}{c7ed2f6dc52325974f771adfbb5d4e57}
+      \strng{authornamehash}{c7ed2f6dc52325974f771adfbb5d4e57}
+      \strng{authorfullhash}{c7ed2f6dc52325974f771adfbb5d4e57}
+      \strng{authorfullhashraw}{c7ed2f6dc52325974f771adfbb5d4e57}
+      \field{sortinit}{S}
+      \field{sortinithash}{b164b07b29984b41daf1e85279fbc5ab}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{IMF Working Paper}
+      \field{number}{114}
+      \field{title}{Estimating and Interpreting Forward Interest Rates: Sweden 1992–1994}
+      \field{volume}{94}
+      \field{year}{1994}
+      \verb{doi}
+      \verb 10.5089/9781451852507.001
+      \endverb
+    \endentry
+    \entry{UdrescuTegmark2020}{article}{}{}
+      \name{author}{2}{}{%
+        {{un=0,uniquepart=base,hash=f2339bd442c7b65225734f4da3499295}{%
+           family={Udrescu},
+           familyi={U\bibinitperiod},
+           given={Silviu-Marian},
+           giveni={S\bibinithyphendelim M\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=b9b3c445e1013a97fc6318e06799b37b}{%
+           family={Tegmark},
+           familyi={T\bibinitperiod},
+           given={Max},
+           giveni={M\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{0df1883f8d98fc7c19b7d00188850bb3}
+      \strng{fullhash}{0df1883f8d98fc7c19b7d00188850bb3}
+      \strng{fullhashraw}{0df1883f8d98fc7c19b7d00188850bb3}
+      \strng{bibnamehash}{0df1883f8d98fc7c19b7d00188850bb3}
+      \strng{authorbibnamehash}{0df1883f8d98fc7c19b7d00188850bb3}
+      \strng{authornamehash}{0df1883f8d98fc7c19b7d00188850bb3}
+      \strng{authorfullhash}{0df1883f8d98fc7c19b7d00188850bb3}
+      \strng{authorfullhashraw}{0df1883f8d98fc7c19b7d00188850bb3}
+      \field{sortinit}{U}
+      \field{sortinithash}{6901a00e45705986ee5e7ca9fd39adca}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Science Advances}
+      \field{number}{16}
+      \field{title}{{AI Feynman}: A physics-inspired method for symbolic regression}
+      \field{volume}{6}
+      \field{year}{2020}
+      \field{pages}{eaay2631}
+      \range{pages}{-1}
+      \verb{doi}
+      \verb 10.1126/sciadv.aay2631
+      \endverb
+    \endentry
+  \enddatalist
+\endrefsection
+\endinput
+

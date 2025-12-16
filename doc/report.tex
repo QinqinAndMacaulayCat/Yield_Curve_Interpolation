@@ -14,6 +14,13 @@
 \usepackage{setspace}
 \onehalfspacing  % 1.5 line spacing for readability
 
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+
+\usepackage{graphicx}
+\usepackage{subcaption}
+\usepackage{float}
+
 % ---------- Section heading formatting ----------
 \usepackage{titlesec}
 \titleformat{\chapter}[display]
@@ -42,15 +49,18 @@
   isbn=false,
   url=false,
   eprint=false]{biblatex}
+
+
 \addbibresource{references.bib}
 
+\renewcommand*{\bibfont}{\small}
+
 % ---------- Title page ----------
-\title{\Huge \textbf{Constructing the Risk-Free Yield Curve Using Symbolic Regression} \\[10pt]
-       \large A Comparative Study of Traditional and Machine Learning Interpolation Methods}
+\title{\Huge \textbf{Constructing the Risk-Free Yield Curve Using Symbolic Regression} \\[10pt]}
 \author{\Large Qinqin Huang \\[6pt]
         \normalsize Rutgers University \\[4pt]
         Master of Quantitative Finance Program}
-\date{October 2025}
+        
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{document}
@@ -62,9 +72,21 @@
 
 \begin{abstract}
 \noindent
-This report investigates the application of Symbolic Regression (SR) for constructing risk-free yield curves.
-Traditional interpolation and parametric models---such as log-linear, monotone-convex, Nelson--Siegel, and Smith--Wilson---are compared against machine learning and deep learning approaches.
-SR is shown to provide interpretable, flexible, and theoretically consistent alternatives for smooth and arbitrage-free yield curve construction.
+This paper evaluates a broad set of yield-curve construction methods, including
+log-linear interpolation, cubic splines, monotone–convex interpolation,
+Nelson--Siegel, Svensson, and a symbolic-regression–based estimator. Using U.S.
+Treasury and OIS data from 2020 to 2024, I compare these approaches along four
+dimensions: arbitrage constraints, forward-rate smoothness, calibration
+accuracy, and robustness to missing maturities. The empirical results show that
+shape-preserving and parametric models—particularly monotone–convex, Nelson--Siegel,
+and Svensson—deliver stable and economically consistent curves across varying
+market conditions. Linear interpolation is highly sensitive to the removal of
+individual maturities, while symbolic regression provides interpretable
+closed-form structures but exhibits higher pricing errors and localized
+irregularities without explicit constraints. Overall, symbolic regression
+serves as a flexible and interpretable complement to traditional methods rather
+than a standalone production-ready solution for yield-curve estimation.
+
 \end{abstract}
 
 \newpage
@@ -73,106 +95,88 @@ SR is shown to provide interpretable, flexible, and theoretically consistent alt
 
 \chapter{Introduction}
 
-The construction of a continuous, risk-free yield curve from discrete market data is central to modern finance.  
-It underpins fixed-income valuation, derivatives pricing, risk management, and monetary policy formulation.  
-Market instruments such as Treasury bills, notes, and overnight indexed swaps (OIS) are quoted only for a finite number of maturities, while continuous discount factors and forward rates are required for pricing and sensitivity analysis.  
-The fundamental challenge lies in constructing a yield curve that is smooth, arbitrage-free, and stable, yet responsive to observed market conditions.
+Constructing a smooth, robust, and arbitrage-free yield curve is essential for
+fixed-income pricing, risk management, and monetary policy analysis. Because
+market yields are available only at discrete maturities, interpolation or curve
+fitting is required, yet existing methods exhibit clear trade-offs: spline-based
+approaches offer high smoothness but may generate oscillatory or implausible
+forward rates, shape-preserving methods enforce monotonicity but limit
+flexibility, and parametric families such as Nelson--Siegel and Svensson remain
+parsimonious but may not adapt well to local curvature. Recent developments in
+symbolic regression provide a data-driven alternative capable of discovering
+interpretable functional forms, although its practical robustness in
+yield-curve construction is not well understood.
 
-Traditional curve construction relies on analytical and numerical interpolation techniques.  
-Linear and log–linear interpolation provide computational simplicity and strict locality but lack smoothness and produce discontinuous forward rates.  
-Spline-based and monotone–convex methods improve differentiability and enforce positivity but can introduce non-local dependencies and sensitivity to boundary conditions \parencite{HaganWest2006,BrigoMercurio2006,Filipovic2009}.  
-Parametric approaches such as Nelson–Siegel and Svensson \parencite{NelsonSiegel1987,Svensson1994} remain popular due to interpretability and parsimony, while kernel-based formulations like Smith–Wilson \parencite{SmithWilson2001,EIOPA2018} ensure convergence to a regulatory ultimate forward rate (UFR).  
-Although these methods form the foundation of industry practice, they rely on fixed functional forms or interpolation rules that may not adapt well to changing yield curve dynamics.
-
-Recent advances in machine learning (ML) and deep learning (DL) have introduced flexible alternatives for yield curve construction.  
-Neural networks, Gaussian processes, and ensemble learning models have been applied to learn nonlinear term structures directly from data, often outperforming traditional parametric models in out-of-sample fitting and forecasting accuracy \parencite{Chen2019,Lim2023,Heaton2020,Cao2021}.  
-However, these black-box models often sacrifice interpretability and theoretical consistency, making them difficult to reconcile with financial constraints such as monotonic discount factors or positive forward rates.  
-To address this trade-off, symbolic regression (SR)—a form of interpretable machine learning that discovers analytical expressions from data—offers a promising hybrid framework.  
-By automatically generating human-readable functional forms, symbolic regression combines the flexibility of ML with the interpretability and theoretical discipline of traditional curve models \parencite{SchmidtLipson2009,UdrescuTegmark2020,Cornelissen2023,Chen2022}.  
-
-This study explores the use of symbolic regression to construct the risk-free yield curve and compares its performance against established interpolation and machine learning approaches.  
-We assess whether symbolic regression can simultaneously achieve smoothness, no-arbitrage consistency, and interpretability, potentially redefining how data-driven yield curve modeling is approached in practice.
+This study compares six methods—log-linear interpolation, cubic splines,
+monotone-convex interpolation, Nelson--Siegel, Svensson, and symbolic regression—using
+U.S. Treasury and OIS data. I evaluate their smoothness, forward-rate behavior,
+calibration accuracy, and robustness using a leave-one-knot-out test that
+assesses sensitivity to missing maturities. The results show that linear
+interpolation is the most sensitive to omitted data, while monotone-convex,
+cubic spline, and parametric models remain highly stable. Symbolic regression
+offers flexible functional forms but requires careful regularization to avoid
+overfitting. Overall, the analysis highlights the practical trade-offs across
+traditional, shape-preserving, parametric, and machine-learning-based yield-curve 
+construction techniques.
 
 \chapter{Literature Review}
 
-\section{Traditional Approaches to Yield Curve Construction}
+Yield curve interpolation aims to construct smooth, arbitrage-free, and well-shaped term structures that reflect market data accurately while preserving theoretical consistency. A good interpolation method should avoid arbitrage, preserve monotonicity where appropriate, ensure local control, yield continuous forward curves, and provide robustness to changes in market data. Depending on the modeling objective and the pricing framework, interpolation may target different types of interest rates: spot rates, forward rates, or discount factors, each with different numerical and financial implications.
 
-Yield curve interpolation has evolved from simple deterministic methods to sophisticated parametric and smoothing techniques.  
-Early studies employed polynomial and spline fits to approximate zero-coupon yields from observed prices \parencite{McCulloch1975,deBoor1978}.  
-The log–linear interpolation on discount factors, later popularized by \textcite{BrigoMercurio2006}, became the industry standard due to its simplicity and arbitrage-free guarantee.  
-Spline-based and monotone–convex interpolations \parencite{HaganWest2006} improved smoothness and local control of the forward curve, though often at the cost of parameter tuning and reduced robustness.  
-Parametric models such as Nelson–Siegel and Svensson \parencite{NelsonSiegel1987,Svensson1994} describe yields as exponential decay combinations capturing level, slope, and curvature dynamics, while the Smith–Wilson method \parencite{SmithWilson2001,EIOPA2018} enforces asymptotic convergence required under Solvency~II and IFRS~17.  
-Despite their widespread use, these methods rely on predefined functional assumptions that limit adaptability to structural regime shifts or highly nonlinear term structures.
+The most basic methods include linear interpolation and piecewise constant interpolation. These are easy to implement and ensure continuity in prices, but often fail to produce smooth forward rate curves. Log-linear interpolation on discount factors, as discussed in \textcite{HaganWest2006}, became widely adopted due to its simplicity and arbitrage-free guarantee. However, it may create unrealistic humps or kinks in the implied forward rate curve.
 
-\section{Machine Learning and Deep Learning in Yield Curve Modeling}
+Cubic spline interpolation was introduced to improve smoothness by enforcing second derivative continuity. The natural cubic spline, proposed by \textcite{McCulloch1975}, fits smooth yield curves by minimizing curvature, but it can produce spurious oscillations and even negative forward rates. To address this, the monotone convex method proposed by \textcite{HaganWest2006} ensures shape preservation and monotonicity in discount factors, which results in a more robust forward curve, especially when market data is sparse or noisy.
 
-Machine learning provides a data-driven paradigm that removes rigid parametric assumptions.  
-Several studies have explored ML techniques for both interpolation and forecasting of the yield curve.  
-\textcite{Chen2019} demonstrated that gradient-boosted trees and support vector regressors outperform Nelson–Siegel in fitting accuracy on U.S.~Treasury yields.  
-\textcite{Lim2023} developed a Gaussian process model under explicit no-arbitrage constraints, producing smooth term structures with uncertainty quantification.  
-\textcite{Heaton2020} proposed a feed-forward neural network trained to approximate yield curves from macroeconomic variables, showing superior performance during volatile regimes.  
-Similarly, \textcite{Cao2021} applied recurrent neural networks (RNNs) and long short-term memory (LSTM) architectures to capture temporal dependencies in daily yield curve movements, improving multi-step forecasting accuracy.  
+Local interpolation methods such as Hermite interpolation and cubic Hermite splines offer greater control over curve shape by explicitly matching slope information at known data points. These methods allow the user to impose derivative constraints and can produce smoother forward rates without the oscillations typical of higher-degree splines.
 
-Deep-learning approaches have also been applied directly to curve interpolation.  
-\textcite{Jeong2022} employed an autoencoder framework to reconstruct continuous yield curves from sparse market observations, achieving high out-of-sample stability.  
-\textcite{MuhleKarbe2019} emphasized that purely data-driven models may produce arbitrage violations if constraints are not embedded into training objectives, motivating hybrid architectures that combine economic structure with neural estimation.  
-Overall, ML and DL methods exhibit strong predictive capabilities but remain limited by interpretability, transparency, and theoretical consistency.
+\textcite{NelsonSiegel1987} and \textcite{Svensson1994} proposed parametric functional forms that describe the term structure using a small number of parameters. These models are widely used in empirical finance and central bank applications due to their ability to capture level, slope, and curvature dynamics in yields. However, they do not guarantee exact fit to market data unless overfitted and may lack flexibility under changing market regimes.
 
-\section{Symbolic Regression as an Interpretable Alternative}
+The Smith–Wilson method, introduced in \textcite{SmithWilson2001} and adopted under Solvency II \parencite{EIOPA2018}, enables extrapolation of yield curves beyond observable maturities while enforcing convergence to a pre-specified ultimate forward rate. It guarantees arbitrage-free behavior but may introduce counterintuitive shapes depending on the choice of convergence speed and market anchors.
 
-Symbolic regression (SR) represents an emerging frontier at the intersection of machine learning and analytical modeling.  
-Unlike conventional regressors that fit parameters to a predefined functional form, SR searches over mathematical expressions—combinations of operators, constants, and functions—to discover compact formulas that best describe data \parencite{SchmidtLipson2009,UdrescuTegmark2020}.  
-This property makes SR inherently interpretable and well-suited for financial contexts where model transparency and theoretical coherence are critical.  
-Recent research by \textcite{Cornelissen2023} demonstrated that SR can rediscover the functional forms of Nelson–Siegel-type curves while uncovering new expressions that adapt to changing yield curve regimes.  
-\textcite{Chen2022} applied SR to yield curve estimation for Chinese sovereign bonds and found that the discovered functional forms improved fitting accuracy while preserving analytical interpretability.  
-SR thus offers a middle ground between the transparency of traditional models and the adaptability of deep learning approaches.
+Each of these methods has trade-offs between smoothness, locality, monotonicity, and extrapolation behavior. Ultimately, the best choice depends on whether the objective is to exactly match observed quotes, preserve numerical stability during calibration, or enforce specific shape or asymptotic behavior.
 
-\section{Gaps in the Existing Literature}
+Recent studies have explored machine learning (ML) as an alternative to traditional interpolation methods for constructing smooth and arbitrage-free yield curves. Traditional approaches—such as cubic splines, monotone convex interpolation, and Nelson–Siegel models—offer strong theoretical foundations and interpretability, but often struggle to capture complex, nonlinear market dynamics.
 
-While ML and DL models have shown strong empirical performance, their lack of interpretability and the difficulty of ensuring arbitrage-free consistency remain major obstacles to adoption in regulated environments.  
-Conversely, traditional models—though interpretable—lack the flexibility to capture complex, nonlinear yield curve behavior under dynamic market conditions.  
-Few studies have explored symbolic regression as a bridge between these paradigms.  
-Existing SR applications to yield curves remain exploratory and have yet to be systematically compared with both classical interpolation and deep-learning methods in terms of accuracy, smoothness, and economic interpretability.  
+Carmona and Nadtochiy (2018) applied kernel smoothing techniques to estimate the yield curve directly from bond prices. Compared to spline methods, kernel approaches showed better local flexibility but required careful tuning of kernel bandwidths and suffered in sparse-data environments.
 
-This research aims to fill this gap by conducting a comparative study of symbolic regression–based yield curve construction against established methods, including log–linear, monotone–convex, Nelson–Siegel, Smith–Wilson, and selected ML/DL models.  
-By doing so, we aim to assess whether SR can deliver interpretable, adaptive, and theoretically consistent term structures suitable for both academic and practical use.  
-The following \textit{Methodology} section formalizes these approaches and introduces the symbolic regression framework used for empirical evaluation.
+Richman and Scognamiglio (2022) proposed an attention-based deep learning model for multi-curve estimation. Their method outperformed classical models (e.g., VECM and Nelson–Siegel–Svensson) in out-of-sample forecasting, benefiting from its ability to capture temporal dependencies. However, the model lacked interpretability and required a large training set.
+
+Pelger (2023) framed the problem as a conditional expectation and used neural networks to learn discount functions from cross-sectional and macroeconomic data. The ML model achieved superior accuracy and factor recovery, but did not inherently preserve financial properties like monotonicity or arbitrage-free behavior.
+
+Although symbolic regression was not covered in the above yield-curve studies, advances in the SR literature suggest that it represents a promising compromise between traditional parametric models and black-box machine-learning approaches. Early work by \textcite{SchmidtLipson2009} demonstrated that genetic-programming–based SR can recover parsimonious analytical laws even from noisy data, illustrating its potential for discovering simple, interpretable structures that generalize well. More recent developments such as the AI Feynman algorithm of \textcite{UdrescuTegmark2020} further improved scalability and robustness by combining physics-inspired decomposition strategies with neural-network approximations and symbolic search. These advances highlight SR’s ability to learn closed-form functional relationships that balance flexibility, interpretability, and extrapolation stability—properties that are particularly desirable in term-structure modeling.
+
+However, SR remains computationally expensive, sensitive to hyperparameter choices, and difficult to constrain within strict no-arbitrage requirements. Despite these challenges, the method provides an attractive middle ground: it offers more structural flexibility than classical parametric models while retaining transparency and analytic tractability, features largely absent in deep learning or kernel-based methods.
+
+In summary, ML-based interpolation methods provide better fit and adaptability in data-rich environments, but face persistent challenges in constraint enforcement, economic consistency, and transparency relative to traditional approaches. Symbolic regression, motivated by recent progress in interpretable machine learning, has the potential to bridge this gap by delivering flexible yet analytically coherent representations of the yield curve.
 
 
-\begin{table}[h]
-\centering
-\caption{Desirable Features of a Good Interpolated Yield Curve}
-\begin{tabularx}{\textwidth}{l c r}
-\toprule
-Feature & Description & Why Important \\
-\midrule
-No-arbitrage & Forward rates are non-negative & Ensures that the constructed yield curve does not imply arbitrage opportunities, which is crucial for accurate pricing of financial instruments. \\
-Exactness & Reproduces market prices & Ensures that the yield curve accurately reflects the prices of the underlying market instruments, leading to reliable valuations. \\
-Locality & Changes in one part of the curve do not affect distant parts & Allows for adjustments to specific segments of the yield curve without unintended consequences on other segments, enhancing flexibility in curve construction. \\
-Stability & Small changes in input data lead to small changes in output & Ensures that the yield curve is robust to minor fluctuations in market data, providing confidence in the derived yields. \\
-Local Hedging & Enables hedging of instruments using nearby maturities & Facilitates effective risk management by allowing traders to hedge positions using instruments with similar maturities, reducing basis risk. \\
-\bottomrule
-\end{tabularx}
-\end{table}
+
 
 \chapter{Methodology}
 
 \section{Overview}
 
-This chapter presents the methodological framework for constructing the risk-free yield curve using symbolic regression (SR) and for comparing it with classical interpolation, parametric, and machine learning approaches.  
-The analysis proceeds in four stages.  
-First, we formalize traditional interpolation and parametric techniques widely used in the industry.  
-Second, we outline representative machine and deep learning models that flexibly learn nonlinear yield curve patterns.  
-Third, we introduce the symbolic regression framework that discovers analytical yield functions automatically.  
-Finally, we describe the validation framework used to assess and compare model performance across accuracy, smoothness, stability, and interpretability.
+This chapter presents the methodological framework for constructing the risk-free yield curve using symbolic regression (SR) and for comparing it with classical interpolation methods.
 
-\section{Traditional Interpolation and Parametric Models}
+The symbols and notation used throughout the chapter are defined as follows:
 
-Let \( P(t) \) denote the discount factor and \( f(t) = -\frac{d\ln P(t)}{dt} \) the instantaneous forward rate.  
-Given observed maturities \( \{T_i\} \) and prices or yields, the goal is to estimate a continuous, arbitrage-free function \( P(t) \) satisfying \( P(0)=1 \) and \( P'(t)<0 \).  
-Traditional methods differ by interpolation domain and smoothness constraints.
+\begin{table}[h!]
+\centering
+\begin{tabular}{ll}
+\hline
+Symbol & Definition \\ \hline
+\( P(t) \) & Discount factor at time \( t \) \\
+\( y(t) \) & Continuously compounded zero-coupon yield at time \( t \) \\
+\( f(t) \) & Instantaneous forward rate at time \( t \), defined as 
+             \( f(t) = -\frac{d \ln P(t)}{dt} \) \\
+\( T_i \) & Maturities of observed market instruments \\
+\( y_i \) & Observed yields at maturities \( T_i \) \\
+\( N \) & Number of observed market instruments \\ \hline
+\end{tabular}
+\end{table}
 
-\subsection{Log-Linear Interpolation on Discount Factors}
+
+\section{Log-Linear Interpolation on Discount Factors}
 
 The log-linear interpolation assumes the natural logarithm of discount factors varies linearly between known maturities \parencite{BrigoMercurio2006,HaganWest2006}:
 
@@ -187,193 +191,558 @@ It guarantees \(P(T)>0\) and non-negative forward rates:
 f(T) = -\frac{d \ln P(T)}{dT} 
        = \frac{\ln P_i - \ln P_{i+1}}{T_{i+1}-T_i} \ge 0.
 \]
-This approach is computationally efficient and arbitrage-free but produces piecewise-constant forwards that lack smoothness.
+This approach is computationally efficient and arbitrage-free. However, because the forward rate is constant within each interval, the resulting forward curve lacks smoothness and may produce unrealistic kinks at knot points.
 
-\subsection{Cubic Spline Interpolation}
+\section{Cubic Spline Interpolation}
 
-Cubic splines are among the most widely used smooth interpolation methods for term-structure estimation \parencite{McCulloch1975,deBoor1978}.  
-The yield or discount factor is modeled as a cubic polynomial between adjacent maturities:
+Cubic splines approximate the term structure by fitting a piecewise cubic polynomial between adjacent maturities \parencite{McCulloch1975}. For knots $T_1 < T_2 < \dots < T_n$, the curve on each interval $[T_i, T_{i+1}]$ is written as
 \[
-y(T) = a_i + b_i (T-T_i) + c_i (T-T_i)^2 + d_i (T-T_i)^3,
-\quad T_i \le T \le T_{i+1}.
+y(T)=a_i+b_i(T-T_i)+c_i(T-T_i)^2+d_i(T-T_i)^3,
+\qquad T_i\le T\le T_{i+1},
 \]
-Coefficients are chosen so that the function and its first two derivatives are continuous at all knot points.  
-Boundary conditions (e.g., “natural” \(y''(T_1)=y''(T_n)=0\)) complete the system.  
-Cubic splines produce \(C^2\)-continuous curves and visually smooth forwards, but they are non-local—changes in one quote propagate globally—and may imply negative forwards, violating no-arbitrage conditions.
-
-
-\subsection{Nelson–Siegel}
-The Nelson–Siegel model \parencite{NelsonSiegel1987} expresses the instantaneous forward rate as a sum of exponential decay functions:
-
+with $h_i=T_{i+1}-T_i$. To determine the spline uniquely, the following conditions are imposed simultaneously. First, the spline interpolates the observed values,
 \[
-f(t) = \beta_0 + \beta_1 e^{-t/\tau} + \beta_2 \frac{t}{\tau} e^{-t/\tau},
+y(T_i)=Y_i,\qquad i=1,\dots,n,
 \]
-where \(\beta_0\) captures the long-term level, \(\beta_1\) the slope, \(\beta_2\) the curvature, and \(\tau\) controls the decay rate.
-
-
-\subsection{Hermite Interpolation}
-
-Hermite interpolation extends cubic splines by enforcing both values and derivatives at the endpoints of each interval.  
-Given discount factors \(P_i\) and local slopes \(f_i\), the Hermite polynomial is
+equivalently,
 \[
-P(T) = h_{00}(\theta)P_i + h_{10}(\theta)(T_{i+1}-T_i)f_i
-      + h_{01}(\theta)P_{i+1} + h_{11}(\theta)(T_{i+1}-T_i)f_{i+1},
+a_i=Y_i,\qquad 
+a_{i+1}+b_{i+1}h_{i+1}+c_{i+1}h_{i+1}^2+d_{i+1}h_{i+1}^3=Y_{i+1}.
 \]
-where \(\theta = \frac{T-T_i}{T_{i+1}-T_i}\) and
+Second, first derivatives are continuous across all internal knots:
+\[
+y'_i(T_{i+1})=y'_{i+1}(T_{i+1}),\qquad i=1,\dots,n-1,
+\]
+i.e.,
+\[
+b_i+2c_i h_i+3d_i h_i^2=b_{i+1}.
+\]
+Third, second derivatives are continuous:
+\[
+y''_i(T_{i+1})=y''_{i+1}(T_{i+1}),\qquad i=1,\dots,n-1,
+\]
+equivalently,
+\[
+2c_i+6d_i h_i = 2c_{i+1}.
+\]
+Finally, two boundary conditions close the system. Common choices include the natural spline condition,
+\[
+y''(T_1)=0,\qquad y''(T_n)=0,
+\]
+the clamped spline condition with prescribed slopes,
+\[
+y'(T_1)=m_1,\qquad y'(T_n)=m_n,
+\]
+or the not-a-knot condition enforcing continuity of third derivatives,
+\[
+d_1=d_2,\qquad d_{n-2}=d_{n-1}.
+\]
+In total, the spline has $4(n-1)$ unknown coefficients $\{a_i,b_i,c_i,d_i\}$ and is determined by $n$ value-matching equations, $(n-2)$ first-derivative continuity equations, $(n-2)$ second-derivative continuity equations, and $2$ boundary conditions, giving $4n-4=4(n-1)$ equations in all. Although cubic splines generate $C^2$-continuous and visually smooth curves, they are non-local and may produce negative or oscillatory forward rates unless additional arbitrage constraints are imposed.
+
+
+\section{Nelson–Siegel}
+
+The Nelson--Siegel model \parencite{NelsonSiegel1987} specifies the zero-coupon yield curve directly through a small number of latent factors with exponential-decay loadings. For a maturity $t$, the zero rate is given by
+\[
+y(t)
+= \beta_0 
++ \beta_1 \left( \frac{1 - e^{-t/\tau}}{t/\tau} \right)
++ \beta_2 \left( 
+      \frac{1 - e^{-t/\tau}}{t/\tau} - e^{-t/\tau}
+  \right),
+\]
+where $\beta_0$ represents the long-term level of interest rates, $\beta_1$ determines the short-end slope, and $\beta_2$ captures medium-term curvature. The decay parameter $\tau$ controls the speed at which the short- and medium-term components lose influence as maturity increases.
+
+Because the model yields closed-form expressions for zero rates and discount factors, it is computationally efficient and easy to calibrate to market instruments. Its factor loadings have clear economic interpretation, and the specification generates smooth, well-behaved term structures without artificial oscillations. These properties explain its widespread use in empirical fixed-income and macro-finance applications, including the estimation of monetary policy expectations, decomposition of yield movements, and forecasting exercises.
+
+Nevertheless, the parsimony of the Nelson--Siegel model also limits its flexibility. With only one curvature factor, the model cannot represent yield curves with multiple humps or rapidly changing shapes. It may underfit the very short or very long ends of the curve, and during stressed market periods its exponential form can oversmooth noisy benchmark yields, resulting in poorer in-sample fit than spline-based or arbitrage-constrained techniques.
+
+Despite these limitations, the Nelson--Siegel formula remains a leading benchmark due to its balance between smoothness, interpretability, and tractability, offering a robust low-dimensional representation of the term structure of interest rates.
+
+The Nelson--Siegel--Svensson (NSS) model \parencite{Svensson1994} extends the original Nelson--Siegel specification by adding a second curvature component, yielding a more flexible parametric representation of the zero-coupon yield curve. The zero rate for maturity $t$ is given by
+\[
+y(t)
+= \beta_0
++ \beta_1 \left( \frac{1 - e^{-t/\tau_1}}{t/\tau_1} \right)
++ \beta_2 \left( 
+      \frac{1 - e^{-t/\tau_1}}{t/\tau_1} - e^{-t/\tau_1}
+  \right)
++ \beta_3 \left(
+      \frac{1 - e^{-t/\tau_2}}{t/\tau_2} - e^{-t/\tau_2}
+  \right),
+\]
+where $\beta_0$ again controls the long-term level, $\beta_1$ the slope, and $\beta_2$ and $\beta_3$ determine medium- and long-horizon curvature components. The decay parameters $\tau_1$ and $\tau_2$ allow the two curvature factors to peak at different maturities, enabling the model to capture richer shapes.
+
+Like the Nelson--Siegel model, the NSS specification admits closed-form zero rates and discount factors, facilitating rapid calibration using least squares or maximum likelihood. The second curvature term substantially improves flexibility: NSS can generate yield curves featuring two humps or pronounced local deviations, a feature particularly valuable during monetary regime shifts or episodes of elevated term premia.
+
+However, the improved flexibility introduces additional challenges. The interaction between $\tau_1$ and $\tau_2$ may create identification issues, especially when their values are close, and the optimization landscape becomes more nonlinear and sensitive to initialization. Moreover, like Nelson--Siegel, the Svensson model remains a purely parametric representation that does not automatically enforce absence of arbitrage, in contrast with spline-based monotone convex methods or HJM-consistent approaches.
+
+Despite these limitations, the NSS model remains one of the most widely adopted parametric yield-curve specifications in central banks and policy institutions due to its tractability, smoothness, and superior empirical fit relative to the three-parameter Nelson--Siegel version.
+
+\section{Hermite Interpolation}
+
+Hermite interpolation extends standard cubic spline methods by enforcing both function values and first derivatives at the endpoints of each interval. Given discount factors $P_i$ and local slopes $f_i$ at adjacent maturities $T_i$ and $T_{i+1}$, the interpolated discount factor on the interval is
+\[
+P(T) = h_{00}(\theta)P_i 
+     + h_{10}(\theta)(T_{i+1}-T_i)f_i
+     + h_{01}(\theta)P_{i+1}
+     + h_{11}(\theta)(T_{i+1}-T_i)f_{i+1},
+\]
+where $\theta = \frac{T - T_i}{T_{i+1} - T_i}$ and the cubic Hermite basis functions are
 \[
 \begin{aligned}
-h_{00}(\theta)&=2\theta^3-3\theta^2+1,&
-h_{10}(\theta)&=\theta^3-2\theta^2+\theta,\\
-h_{01}(\theta)&=-2\theta^3+3\theta^2,&
-h_{11}(\theta)&=\theta^3-\theta^2.
+h_{00}(\theta) &= 2\theta^3 - 3\theta^2 + 1, &
+h_{10}(\theta) &= \theta^3 - 2\theta^2 + \theta,\\[2pt]
+h_{01}(\theta) &= -2\theta^3 + 3\theta^2, &
+h_{11}(\theta) &= \theta^3 - \theta^2.
 \end{aligned}
 \]
-This ensures \(C^1\) continuity and good local control.  
-Its main drawback is dependence on reliable slope estimates \(f_i\), which can be noisy in market data.
 
-\subsection{Monotone–Convex Interpolation}
+This construction guarantees $C^1$ continuity of the discount curve and provides strong local control: modifying slope or level at a knot affects only the neighboring interval. As a result, Hermite interpolants avoid the oscillatory artifacts that can arise in higher-order spline methods.
 
-The monotone–convex interpolation of \textcite{HaganWest2006} provides smooth, locally controlled, and arbitrage-free curves.  
-For each interval:
+The main limitation of Hermite interpolation is its reliance on accurate slope estimates $f_i$. In many fixed-income markets, quotes may be sparse or subject to microstructure noise, making numerical derivatives unstable and potentially introducing artifacts into the curve. Consequently, Hermite interpolation works well when reliable forward-rate information is available, but may be less robust than monotone or convexity-preserving spline schemes in noisy market environments.
+
+\section{Monotone–Convex Interpolation}
+
+The monotone--convex interpolation method of \textcite{HaganWest2006} constructs a smooth, locally controlled, and arbitrage-free discount curve by ensuring that the implied forward rates remain positive and free of spurious oscillations. On each interval $[T_i, T_{i+1}]$, the instantaneous forward rate is modeled as a quadratic function
 \[
-f(T) = f_i + \alpha_i (T-T_i) + \beta_i (T-T_i)^2,
+f(T) = f_i + \alpha_i (T - T_i) + \beta_i (T - T_i)^2,
 \]
-where coefficients are solved from continuity and monotonicity constraints on forward rates.  
-The result is a \(C^1\)-continuous curve with positive forwards and stable PV01 sensitivity, now standard for OIS and swap curves.
+where $f_i$ denotes the forward rate at $T_i$, and the coefficients $\alpha_i$ and $\beta_i$ are chosen to satisfy $C^1$ continuity across knot points while enforcing monotonicity or convexity of the forward curve when warranted by the data.
 
-\subsection{Parametric Models: Nelson–Siegel and Smith–Wilson}
+The construction guarantees that the discount factors remain strictly decreasing and that forward rates do not exhibit oscillatory artifacts common in higher-order spline methods. This leads to stable PV01 and bucket sensitivities, which is critical for risk management and hedging applications. Because each interval depends only on local slope information, the method provides strong local control without sacrificing smoothness.
 
-Parametric models summarize the yield curve with a small set of interpretable parameters.  
-The Nelson–Siegel model \parencite{NelsonSiegel1987} expresses zero rates as
-\[
-y(t) = \beta_0 
-      + \beta_1 \frac{1 - e^{-t/\tau_1}}{t/\tau_1}
-      + \beta_2 \!\left(\frac{1 - e^{-t/\tau_1}}{t/\tau_1} - e^{-t/\tau_1}\right).
-\]
-The Svensson extension \parencite{Svensson1994} adds another exponential term to capture long-term curvature.  
-The Smith–Wilson model \parencite{SmithWilson2001,EIOPA2018} uses a kernel representation:
-\[
-P(t) = e^{-\omega t} + \sum_{i=1}^N \zeta_i W(t,t_i),
-\]
-which forces convergence to a regulatory ultimate forward rate.  
-Parametric models are parsimonious and interpretable but often too rigid for dynamic curve shapes.
-
-\section{Machine and Deep Learning Approaches}
-
-Machine learning models remove fixed functional assumptions and learn yield relationships directly from data.  
-Given maturities \(T_i\) and yields \(y_i\), a model \( \hat{y} = f_\theta(T) \) with parameters \(\theta\) minimizes:
-\[
-\mathcal{L}(\theta)=\frac{1}{N}\sum_{i=1}^N (y_i-f_\theta(T_i))^2.
-\]
-
-\subsection{Gaussian Process Regression}
-
-Gaussian Process (GP) regression treats the yield curve as a random function with mean \(m(t)\) and covariance \(k(t,t')\) \parencite{Lim2023}:
-\[
-y(t)\sim \mathcal{GP}(m(t),k(t,t')).
-\]
-No-arbitrage can be enforced through kernel design or derivative penalties.  
-GPs yield smooth curves and uncertainty estimates but scale poorly with large datasets.
-
-\subsection{Neural Network and LSTM Models}
-
-Feed-forward networks approximate nonlinear mappings via stacked affine transformations and activation functions \parencite{Heaton2020}:
-\[
-\hat{y}=f_\theta(T)=\sigma(W_2\,\sigma(W_1T+b_1)+b_2).
-\]
-Recurrent (RNN) and long short-term memory (LSTM) networks model temporal yield dynamics \parencite{Cao2021}, while autoencoders reconstruct missing maturities from compressed latent representations \parencite{Jeong2022}.  
-Such models are flexible but opaque, data-intensive, and difficult to align with financial theory \parencite{MuhleKarbe2019}.
+In practice, the monotone--convex scheme has become the standard for interpolating OIS and swap curves, where smoothness, stability, and the absence of static arbitrage are essential requirements.
 
 \section{Symbolic Regression Framework}
 
 \subsection{Concept and Rationale}
 
-Symbolic regression (SR) is an interpretable machine-learning method that searches for closed-form expressions that best fit data \parencite{SchmidtLipson2009,UdrescuTegmark2020}.  
-Instead of learning parameters in a fixed architecture, SR evolves symbolic combinations of basic operations (\(+,-,\times,\div,\exp,\log\)) and functional primitives (\(t, e^{-t/\tau}\), etc.).  
-This bridges analytical models (e.g., Nelson–Siegel) and data-driven learning by discovering new functional forms directly from data.
+
+Symbolic regression (SR) is an interpretable machine-learning framework that searches over the space of closed-form mathematical expressions to identify functional relationships directly from data. 
+Unlike conventional models that estimate parameters within a predetermined architecture, SR explores compositions of elementary operators (such as $+,-,\times,\div,\exp,\log$) and functional primitives relevant for term-structure modeling (e.g., $t$, $e^{-t/\tau}$). 
+This approach effectively bridges classical parametric yield-curve models (such as Nelson--Siegel or Svensson) and flexible data-driven methods by allowing the functional form itself to be discovered rather than imposed.
+
+Early work in symbolic regression demonstrated that genetic-programming–based approaches can recover parsimonious analytical structures even from noisy data, while more recent advancements improved scalability by combining decomposition strategies, function approximation, and symbolic search.  
+In financial applications, SR has been used to learn parsimonious and interpretable representations of term structures, offering a transparent alternative to black-box methods.  
+Because SR yields explicit analytic formulas, the resulting curves provide economic interpretability, stable extrapolation behavior, and ease of sensitivity analysis, making it a promising tool for yield-curve estimation and interest-rate modeling.
 
 \subsection{Algorithmic Workflow}
 
-The SR process includes:
-\begin{enumerate}
-  \item \textbf{Expression generation:} Randomly combine primitives and operators to produce candidate formulas.
-  \item \textbf{Evaluation:} Fit each candidate to yields and compute loss (RMSE).
-  \item \textbf{Selection and evolution:} Keep top performers and evolve them via crossover and mutation as in genetic programming \parencite{Koza1992}.
-  \item \textbf{Simplification:} Apply symbolic simplification and penalize complexity to encourage parsimony.
-  \item \textbf{Validation:} Test out-of-sample performance and check no-arbitrage consistency.
-\end{enumerate}
+
+\begin{algorithm}[H]
+\caption{Symbolic Regression Workflow}
+\begin{algorithmic}[1]
+
+\Require Dataset $\{(t_i, y_i)\}_{i=1}^N$, operator set $\mathcal{O}$, primitive set $\mathcal{P}$
+\State Initialize population $\mathcal{F}_0$ with random expressions built from $\mathcal{O}$ and $\mathcal{P}$
+
+\For{generation $g = 1,2,\dots,G$}
+
+    \For{each expression $f \in \mathcal{F}_{g-1}$}
+        \State Fit $f$ to data (optimize numeric constants)
+        \State Compute loss $\mathcal{L}(f)$ (e.g., RMSE)
+    \EndFor
+
+    \State Select top-performing expressions $\mathcal{S}_g$ according to fitness
+
+    \State Generate new candidate expressions:
+    \State \quad \textbf{Crossover:} combine subtrees from two parents
+    \State \quad \textbf{Mutation:} randomly replace operators/primitives
+
+    \State Form new population $\mathcal{F}_g$ from $\mathcal{S}_g$ and evolved candidates
+    \State Apply symbolic simplification to each $f \in \mathcal{F}_g$
+    \State Apply parsimony penalty to discourage excessive complexity
+
+\EndFor
+
+\State Select final model $f^\star$ based on validation loss and no-arbitrage checks
+\State \Return Closed-form expression $f^\star(t)$
+
+\end{algorithmic}
+\end{algorithm}
 
 \subsection{Objective Function and Constraints}
 
-To balance fit, smoothness, and interpretability, the SR objective combines multiple penalties:
+To jointly control goodness of fit, smoothness, and interpretability, the SR estimator minimizes a composite objective,
 \[
-\mathcal{J}(f)=
+\mathcal{J}(f)
+=
 \mathrm{RMSE}(f)
-+\lambda_1\int (f''(t))^2dt
++\lambda_1 \int_0^{T_{\max}} \!\! \bigl(f''(t)\bigr)^2 \, dt
 +\lambda_2\,\mathrm{Complexity}(f),
 \]
-subject to arbitrage-free constraints:
+where the second term penalizes excessive curvature in forward rates and the third enforces parsimony by discouraging unnecessarily large expressions.
+
+
+\subsection{Model Validation}
+
+To ensure that the estimated discount curve is economically meaningful, numerically stable, and free of static arbitrage, I evaluate the fitted curve using several complementary validation checks. These diagnostics assess not only the quality of fit to market instruments, but also the structural properties of the term structure.
+
+\paragraph{1. Positivity of discount factors.}
+Discount factors represent present values and must remain strictly positive for all maturities:
 \[
-P(t)=e^{-\int_0^t f(u)\,du}>0, \qquad P'(t)<0.
+P(t) > 0 \quad \forall\, t \ge 0.
 \]
-Violations are penalized heavily, ensuring positive discount factors and monotonic term structures.
+I evaluate $P(t)$ on a dense maturity grid to ensure that no negative values arise, even under interpolation or extrapolation.
 
-\section{Model Validation and Comparison}
+\paragraph{2. Monotonicity and no-arbitrage.}
+An arbitrage-free term structure must be non-increasing:
+\[
+P'(t) \le 0.
+\]
+I compute discrete slopes $P(t_{k+1})-P(t_k)$ across the maturity grid to detect upward movements, which would imply static arbitrage opportunities.
 
-\subsection{Validation Framework}
+\paragraph{3. Forward-rate regularity.}
+The instantaneous forward rate,
+\[
+f(t) = -\frac{d \ln P(t)}{dt},
+\]
+should be well-defined, continuous, and free of spikes. I inspect forward-rate curves for discontinuities, extreme local variation, or implausible short-term behavior, all of which may indicate local overfitting.
 
-To assess model performance, all methods are calibrated on daily U.S.~Treasury yield data and evaluated using consistent metrics:  
-\begin{enumerate}
-  \item \textbf{Accuracy:} In-sample and out-of-sample fit measured by root mean square error (RMSE) and mean absolute error (MAE).
-  \item \textbf{Smoothness and Stability:} Measured by the integrated squared second derivative of the forward rate,
-  \(\int (f''(t))^2dt\), and by locality tests that perturb a single market quote and record global yield changes.
-  \item \textbf{Economic Consistency:} Proportion of maturities violating \(f(t)\ge0\) or \(P'(t)<0\).
-  \item \textbf{Interpretability and Complexity:} Number of free parameters (for classical/ML models) or symbolic tree size (for SR).
-\end{enumerate}
+\paragraph{4. Smoothness and shape stability.}
+A realistic discount curve should avoid unnecessary oscillations. I assess smoothness through the continuity of $P(t)$ and $f(t)$, and check curvature patterns using second-difference diagnostics. Excessive curvature or oscillatory patterns indicate numerical instability or insufficient regularization.
 
-Each curve is fitted on a training subset (e.g., 80\% of observations) and validated on held-out maturities.  
-Model robustness is further tested by adding small shocks (\(\pm1\)~bp) to selected quotes and measuring how localized the curve response is (“delta bleeding”).
+\paragraph{5. Calibration accuracy.}
+The fitted curve should reproduce market instruments with small pricing errors:
+\[
+\text{Error}(T_i) = 
+\left| P_{\text{model}}(T_i) - P_{\text{mkt}}(T_i) \right|.
+\]
+Exact matching is not required—especially under noisy market quotes—but errors should be uniformly small and stable across maturities.
 
-\subsection{Model Comparison}
+\paragraph{6. Robustness and sensitivity analysis.}
+A reliable model should respond smoothly to small perturbations of input data. I conduct:
+\begin{itemize}
+    \item \textit{Leave-one-out tests}: removing one maturity and re-estimating the curve;
+    \item \textit{Shock tests}: shifting selected yields by small amounts (e.g., $\pm$1 bp);
+    \item \textit{Comparative analysis}: examining resulting changes in $P(t)$ and $f(t)$.
+\end{itemize}
+A stable model should exhibit only minor and smooth adjustments, without structural breaks or instability.
 
-Performance metrics are aggregated into comparative tables.  
-An illustrative example is shown below.
-
-\begin{table}[h!]
-\centering
-\caption{Illustrative Comparison of Yield Curve Methods}
-\begin{tabularx}{\textwidth}{lccccc}
-\toprule
-Method & RMSE (bp) & Smoothness & Arbitrage Violations & Locality & Complexity \\
-\midrule
-Log-Linear (DF) & 0.85 & 0.40 & 0.0\% & 0.92 & Low \\
-Cubic Spline & 0.60 & 0.12 & 2.1\% & 0.55 & Medium \\
-Hermite & 0.58 & 0.18 & 0.3\% & 0.48 & Medium \\
-Monotone–Convex & 0.63 & 0.20 & 0.0\% & 0.42 & Medium \\
-Nelson–Siegel & 0.70 & 0.25 & 0.5\% & 0.45 & Low \\
-Gaussian Process & 0.55 & 0.15 & 1.2\% & 0.38 & High \\
-Neural Network & 0.50 & 0.14 & 4.8\% & 0.37 & High \\
-Symbolic Regression & 0.53 & 0.17 & 0.0\% & 0.40 & Low \\
-\bottomrule
-\end{tabularx}
-\end{table}
-
-\subsection{Interpretation of Results}
-
-The best model depends on the application.  
-If the objective is pure accuracy, deep neural networks or Gaussian processes may perform best.  
-If stability and economic coherence are critical, monotone–convex or Hermite interpolation are preferred.  
-For interpretable functional modeling that balances fit and theory, symbolic regression offers the most attractive compromise—producing analytical, smooth, and arbitrage-consistent curves that generalize well.
-
-\section{Summary}
-
-This chapter developed a comprehensive framework for constructing and evaluating risk-free yield curves.  
-Classical interpolation (log-linear, cubic spline, Hermite, monotone–convex) and parametric models (Nelson–Siegel, Smith–Wilson) provide theoretical benchmarks.  
-Machine and deep learning methods offer flexible data-driven alternatives.  
-Symbolic regression unifies these paradigms by discovering interpretable and smooth analytical forms that satisfy no-arbitrage conditions.  
-The next chapter presents the empirical implementation and comparative results.
+\medskip
+Overall, these validation criteria ensure that the estimated discount curve is monotone, smooth, robust, and aligned with market instruments, making it suitable for valuation, hedging, and risk-management applications.
 
 \newpage
+
+
+\chapter{Results}
+
+
+\section{Data Description}
+
+The data used in this study consists of daily observations of U.S. Treasury yields and Overnight Indexed Swap (OIS) rates as well as treasuries trading data. The data source is WRDS (Wharton Research Data Services). The sample period spans from January 1, 2020 to December 31, 2024. The frequency of interpolation is quarterly as the computation cost is high.
+
+\section{Positivity and Monotonicity Checks}
+
+A valid discount curve must remain strictly positive and monotonically
+non-increasing to prevent static arbitrage. I evaluate these conditions
+point-wise along each fitted curve. Table~\ref{tab:mono_positive} summarizes the
+results.
+
+All methods satisfy the positivity constraint, as discount factors remain above
+zero for all maturities. However, only linear interpolation, monotone--convex
+interpolation, and the symbolic‐regression curve maintain global monotonicity.
+In contrast, cubic spline, Nelson--Siegel, and Svensson methods generate local
+violations of monotonicity, particularly around data gaps or curvature changes.
+These upward “bumps’’ imply temporarily increasing discount factors, which are
+theoretically inconsistent and reflect inherent flexibility in these smooth
+parametric families.
+
+The symbolic‐regression curve is monotone in this sample, but this occurs
+without an explicit constraint. The learned closed-form expression happened to
+produce a globally decreasing discount function; monotonicity is therefore not
+guaranteed and may fail in other datasets unless explicit penalties or
+constraints are imposed.
+
+\begin{table}[H]
+\centering
+\caption{Positivity and Monotonicity Checks}
+\label{tab:mono_positive}
+\begin{tabular}{lcc}
+\toprule
+\textbf{Method} & \textbf{Positive} & \textbf{Non-Increasing} \\
+\midrule
+Symbolic regression (yield) & True & True \\
+Linear interpolation         & True & True \\
+Cubic spline                 & True & False \\
+Nelson--Siegel               & True & False \\
+Svensson                     & True & False \\
+Monotone convex              & True & True \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Forward-Rate Regularity}
+
+
+To assess whether each interpolation method produces smooth and economically
+plausible forward curves, I compute two diagnostics: (i) the volatility of
+forward-rate increments (the average absolute change between adjacent maturities),
+and (ii) the maximum single-step change. Smaller values indicate smoother and
+more stable forward-rate dynamics.
+
+Table~\ref{tab:fwd_smoothness} reports results for a representative market date
+(2020-03-31), during which the yield curve exhibited strong stress and
+irregularities. Despite the volatile environment, all methods achieve low
+incremental variation, with forward-rate volatility centered around 0.005.
+
+Nelson--Siegel and Svensson exhibit the smallest maximum jumps, reflecting the
+stabilizing effect of their parsimonious parametric structure. Linear
+interpolation displays the largest maximal change due to its piecewise-linear
+construction. Symbolic regression produces forward curves that are similarly
+smooth, although minor fluctuations may arise near densely clustered maturities,
+where the learned analytic expression becomes more sensitive.
+
+\begin{table}[H]
+\centering
+\caption{Forward-rate smoothness metrics on 2020-03-31}
+\label{tab:fwd_smoothness}
+\begin{tabular}{lcc}
+\toprule
+\textbf{Method} & \textbf{Volatility} & \textbf{Max Change} \\
+\midrule
+Symbolic regression (yield) & 0.005151 & 0.000372 \\
+Linear interpolation         & 0.005043 & 0.005198 \\
+Cubic spline                 & 0.005665 & 0.000294 \\
+Nelson--Siegel               & 0.005243 & 0.000043 \\
+Svensson                     & 0.004972 & 0.000146 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Forward-rate plots across several dates further confirm that all methods produce
+continuous and well-behaved forward-rate curves. Parametric models remain
+especially stable, whereas linear interpolation introduces visible kinks, and
+symbolic regression—though generally smooth—may exhibit small local
+irregularities near key maturities.
+
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\textwidth]{../results/graphs/forward_rates_2021-09-30.png}
+\caption{Forward rates on 2021-09-30.}
+\label{fig:forward_rates_2021}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\textwidth]{../results/graphs/forward_rates_2022-09-30.png}
+\caption{Forward rates on 2022-09-30.}
+\label{fig:forward_rates_2022}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\textwidth]{../results/graphs/forward_rates_2024-09-30.png}
+\caption{Forward rates on 2024-09-30.}
+\label{fig:forward_rates_2024}
+\end{figure}
+
+\section{Smoothness and Shape Stability}
+
+To examine the behavior of different interpolation methods under varying market conditions, I selected two representative dates from the recent U.S.\ Treasury term structure. The first, 2024--09--18, exhibits a pronounced post-pandemic yield inversion with elevated short rates and depressed long-term yields. The second, 2025--02--11, reflects a more typical upward-sloping curve in which yields rise monotonically with maturity. These two contrasting shapes provide a useful stress test for assessing smoothness and shape stability across interpolation approaches.
+
+Across both dates, linear interpolation produces piecewise-linear segments with visible kinks at key maturities, indicating limited smoothness and potential instability in forward rates. Cubic splines achieve higher smoothness overall but tend to overshoot between sparse long-maturity points, particularly in the 2024--09--18 case where the long end is nearly flat; forcing the curve to pass through every key point amplifies local oscillations. Monotone convex interpolation yields stable and economically plausible shapes in both environments, with strong local control and no artificial wiggles, though it may appear slightly rigid when the market curve contains sharp curvature.
+
+Parametric models behave differently. Nelson--Siegel retains global smoothness but, due to its restrictive functional form, may fail to reproduce the true long-end level when observations are sparse—as seen on 2025--02--11. The Svensson extension allows additional curvature and fits better in both regimes, though the extra flexibility can introduce mild shape instability if the two decay parameters interact unfavorably.
+
+Symbolic regression, while offering the advantage of fully data-driven functional discovery, shows mixed behavior. In regions with well-separated key maturities, it produces smooth and interpretable curves comparable to parametric models. However, when adjacent points lie close together—especially around short maturities or during yield inversion—the learned expression may introduce localized irregularities or mild non-smoothness due to the model’s effort to fit sharp transitions. This highlights a practical trade-off: symbolic regression provides structural flexibility and interpretability, but may require additional regularization or constraints to ensure stable behavior around dense clusters of input maturities.
+
+Overall, the comparison across these two dates shows that interpolation methods differ materially in their ability to maintain smoothness, avoid spurious curvature, and produce robust shapes under changing market conditions. Yield inversion, in particular, stresses which models can accommodate sharp slopes without generating oscillations, while the upward-sloping curve tests long-end extrapolation and stability in sparsely observed regions.
+
+
+\begin{figure}[H]
+\centering
+
+% ---------- Row 1 ----------
+\begin{subfigure}{0.48\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{../results/graphs/linear_interpolation_20240930.png}
+    \caption{Linear interpolation}
+\end{subfigure}
+\hfill
+\begin{subfigure}{0.48\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{../results/graphs/cubic_spline_interpolation_20240930.png}
+    \caption{Cubic spline interpolation}
+\end{subfigure}
+
+\vspace{1em}
+
+% ---------- Row 2 ----------
+\begin{subfigure}{0.48\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{../results/graphs/monotone_convex_interpolation_20240930.png}
+    \caption{Monotone convex interpolation}
+\end{subfigure}
+\hfill
+\begin{subfigure}{0.48\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{../results/graphs/nelson_siegel_interpolation_20240930.png}
+    \caption{Nelson--Siegel interpolation}
+\end{subfigure}
+
+\vspace{1em}
+
+% ---------- Row 3 ----------
+\begin{subfigure}{0.48\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{../results/graphs/svensson_interpolation_20240930.png}
+    \caption{Svensson interpolation}
+\end{subfigure}
+\hfill
+\begin{subfigure}{0.48\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{../results/graphs/syreg_interpolation_20240930.png}
+    \caption{Symbolic regression interpolation}
+\end{subfigure}
+
+\caption{Yield curve estimates on 2024-09-30 using six interpolation methods: linear, cubic spline, monotone convex, Nelson--Siegel, Svensson, and symbolic regression.}
+\label{fig:interp_20240930}
+\end{figure}
+
+
+
+\begin{figure}[H]
+\centering
+
+% ---------- Row 1 ----------
+\begin{subfigure}{0.48\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{../results/graphs/linear_interpolation_20220930.png}
+    \caption{Linear interpolation}
+\end{subfigure}
+\hfill
+\begin{subfigure}{0.48\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{../results/graphs/cubic_spline_interpolation_20220930.png}
+    \caption{Cubic spline interpolation}
+\end{subfigure}
+
+\vspace{1em}
+
+% ---------- Row 2 ----------
+\begin{subfigure}{0.48\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{../results/graphs/monotone_convex_interpolation_20220930.png}
+    \caption{Monotone convex interpolation}
+\end{subfigure}
+\hfill
+\begin{subfigure}{0.48\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{../results/graphs/nelson_siegel_interpolation_20250211.png}
+    \caption{Nelson--Siegel interpolation}
+\end{subfigure}
+
+\vspace{1em}
+
+% ---------- Row 3 ----------
+\begin{subfigure}{0.48\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{../results/graphs/svensson_interpolation_20220930.png}
+    \caption{Svensson interpolation}
+\end{subfigure}
+\hfill
+\begin{subfigure}{0.48\textwidth}
+    \centering
+    \includegraphics[width=\linewidth]{../results/graphs/syreg_interpolation_20220930.png}
+    \caption{Symbolic regression interpolation}
+\end{subfigure}
+
+\caption{Yield curve estimates on 2022-09-30 using six interpolation methods: linear, cubic spline, monotone convex, Nelson--Siegel, Svensson, and symbolic regression.}
+\label{fig:interp_20220930}
+\end{figure}
+
+
+\section{Calibration Accuracy}
+
+Table~\ref{tab:calibration_errors} reports the average pricing errors across all
+evaluation dates. Overall, the differences across methods are small: MAE values fall
+within a narrow range of roughly 2.63--2.75 dollars and RMSE between 7.55--7.70
+dollars. Linear and monotone--convex interpolation achieve the lowest mean
+absolute errors, while Nelson--Siegel, Svensson, and cubic spline perform
+comparably.
+
+Symbolic regression fitted on yields exhibits slightly higher errors than the other
+methods, which reflects its emphasis on closed-form simplicity rather than exact
+replication of quotes. Nevertheless, its MAE and RMSE remain close to the
+benchmarks, demonstrating that the method is still able to reproduce market prices
+reasonably well despite its structural constraints.
+
+\begin{table}[H]
+\centering
+\caption{Average Pricing Errors Across Sample Dates}
+\label{tab:calibration_errors}
+\begin{tabular}{lcc}
+\toprule
+\textbf{Method} & \textbf{MAE} & \textbf{RMSE} \\
+\midrule
+Nelson--Siegel & 2.7224 & 7.5510 \\
+Svensson       & 2.7049 & 7.5637 \\
+Cubic spline   & 2.6416 & 7.6768 \\
+Linear         & 2.6347 & 7.5773 \\
+Monotone convex & 2.6354 & 7.5989 \\
+Symbolic regression (yield) & 2.7508 & 7.6975 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+
+\section{Robustness and Sensitivity Analysis}
+
+
+The leave-one-knot-out robustness test reveals meaningful differences across
+interpolation methods. Linear interpolation exhibits the largest sensitivity:
+removing a single key maturity produces an average MSE fluctuation of
+$1.051\times 10^{-3}$ and an MAE fluctuation of $7.87\times 10^{-4}$,
+indicating that the method relies heavily on the presence of individual
+maturities.
+
+Syreg\_Yield performs moderately better, with average fluctuations of
+$6.40\times 10^{-5}$ (MSE) and $6.40\times 10^{-4}$ (MAE). However, its
+dependence on specific knot points is still notably stronger than that of
+the smoother or shape-preserving methods.
+
+Cubic Spline, Nelson--Siegel, Svensson, and Monotone--Convex all show
+essentially zero MSE fluctuations when individual maturities are removed.
+Among these, Monotone--Convex achieves the smallest MAE fluctuation
+($3.0\times 10^{-6}$), followed by Cubic Spline ($8.0\times 10^{-6}$). 
+Svensson and Nelson--Siegel produce slightly larger MAE fluctuations
+($6.1\times 10^{-5}$ and $1.04\times 10^{-4}$, respectively), but still
+exhibit strong robustness overall. These results indicate that
+shape-preserving or parametric curve families are substantially more stable
+under local data omissions than non-smooth alternatives such as the Linear
+or Syreg\_Yield methods.
+
+
+\begin{table}[htbp]
+\centering
+\caption{Leave-One-Knot-Out Robustness Results}
+\begin{tabular}{lcc}
+\hline
+\textbf{Method} & \textbf{Average MSE Fluctuation} & \textbf{Average MAE Fluctuation} \\
+\hline
+Syreg\_Yield      & 6.40$\times 10^{-5}$  & 6.40$\times 10^{-4}$ \\
+Linear            & 1.051$\times 10^{-3}$ & 7.87$\times 10^{-4}$ \\
+Cubic\_Spline     & 0.0                   & 8.0$\times 10^{-6}$  \\
+Nelson\_Siegel    & 0.0                   & 1.04$\times 10^{-4}$ \\
+Svensson          & 0.0                   & 6.1$\times 10^{-5}$  \\
+Monotone\_Convex  & 0.0                   & 3.0$\times 10^{-6}$  \\
+\hline
+\end{tabular}
+\end{table}
+
+
+
+\chapter{Conclusion}
+
+This study evaluates six yield-curve construction methods using U.S. Treasury and OIS data from 2020–2024. While all approaches produce positive discount factors and broadly smooth forward rates, their performance differs in monotonicity, robustness, and calibration accuracy. Traditional methods such as monotone–convex interpolation and the Nelson–Siegel–Svensson family deliver stable, smooth, and economically consistent curves across market conditions. Linear interpolation is simple but exhibits the highest sensitivity to omitted maturities.
+
+Symbolic regression (SR) offers clear advantages in interpretability, producing closed-form expressions that resemble parametric term-structure models. In several cases, SR generates smooth discount and forward curves without requiring an imposed functional form. However, the empirical results also show important weaknesses: SR displays slightly higher pricing errors than benchmark methods, exhibits sensitivity to closely spaced maturities, and can introduce local irregularities around the short end or inverted segments. Without explicit constraints, monotonicity and no-arbitrage properties are not guaranteed, making SR less reliable across datasets. In addition, computational cost and hyperparameter sensitivity limit its practical robustness.
+
+Overall, SR functions better as a complementary modeling tool—useful for discovering interpretable functional structures—rather than as a stand-alone production curve. Future improvements should incorporate explicit shape constraints, stronger regularization, systematic hyperparameter search, and hybrid approaches that combine SR with established monotone or spline-based frameworks.
+
 
 \printbibliography
 
